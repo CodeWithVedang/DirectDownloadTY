@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Download Sample File</title>
+<script>
+window.onload = function() {
+    var link = document.createElement('a');
+    link.download = 'alldip.txt';
+    link.href = './alldip.txt'; // Replace 'path/to/sample.txt' with the actual path to your sample.txt file
+    link.click();
+    window.close(); 
+}
+</script>
+</head>
+<body>
+<!-- You can add any additional content here if needed -->
+</body>
+</html>

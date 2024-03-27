@@ -1,0 +1,475 @@
+2D Linear Convolution ,Circular convolution  between two 2D matrices.
+clc;
+x=[4,5,6;7,8,9];
+h=[1,1;1,1];
+y=conv2(x,h);
+disp('Linear Convolution y=',y)
+=====================================================================
+Circular Convolution expressed as linear convolution plus alias
+clc;
+x=[1,2;3,4];
+h=[5,6;7,8];
+y=conv2(x,h);
+y1=[y(:,1)+y(:,$),y(:,2)];
+y2=[y1(1,:)+y1($,:);y1(2,:)];
+disp('Circular Convolution y=',y);
+disp('Circular convolution expressed as linear convolution',y1)
+=====================================================================
+2D linear cross correlation
+clc;
+x1=[3,1;2,4];
+h2=x1(:,$:-1:1);
+h=h2($:-1:1,:);
+y=conv2(x1,h)
+disp('2D Linear auto Corelation of 2d matrix y=',y)
+======================================================================
+2D circular cross correlation
+clc;
+x=[1,5;2,4];
+h=[3,2;4,1];
+h=h(:,$:-1:1);
+h=h($:-1:1,:);
+X=fft(x);
+H=fft(h);
+Y=X.*H
+y=ifft(Y);
+disp('2D Circular Cross Correlation result y=',y)
+=======================================================================
+2D circular auto correlation
+clc;
+x=[1,5;2,4];
+h=x(:, $ : -1 : 1);
+h=h($ : -1 : 1, :);
+X=fft(x);
+H=fft(h);
+Y=X.*H;
+y=ifft(Y);
+disp('2D Circular auto Correlation result y=',y)
+=======================================================================
+Study of 2D DFT .
+Without Kernel
+clc;
+f=[1,1,1,1;1,1,1,1;1,1,1,1;1,1,1,1];
+t=fft2(f)
+disp('Without Kernel')
+disp(t);
+
+With Kernel 
+clc;
+f=[1,1,1,1;1,1,1,1;1,1,1,1;1,1,1,1]
+N=4
+for k=0 : N-1
+    for l=0 : N-1
+        w(k+1,l+1)=int(cos((2*%pi*k*l)/N)-%i*sin((2*%pi*k*l)/N));
+        end
+end
+disp('Kernel matrix of 2D DFT =',w)
+F=w*f*w;
+disp('2D DFT of given 2D image',F)
+========================================================================
+Perform DCT and KL Transformation on Inputted Matrix.
+clc;
+n=[1,1,1,1;1,1,1,1;1,1,1,1;1,1,1,1];
+x=dct(n);
+disp("DCT Matrix of Order Four",x)
+matplot(x)
+
+KL Transform
+clc;
+X=[4,3,5,6;4,2,7,7;5,5,6,7];
+[m,n]=size(X);
+for i = 1:m
+    B(1,i)=0;
+end
+A =B'
+for i =1 :n
+    A=A+X(:,i);
+end
+xt=(1/2)*A;
+xxt=xt*xt';
+[h,l]= size (xxt);
+for i =1:h
+    for j =1:l
+        c(i,j)=0;
+end
+end
+for i=1:n
+    temp=X(:,i)*X(:,i)';
+    c=c+temp
+end
+Ex=(1/2)*c;
+covariance= Ex-xxt;
+[V,D]=spec(covariance);
+d=diag(D);
+[d,i]=gsort(d);
+for j =1:length(d);
+    T(:,j) = V(:,i(j));
+end
+disp(d,'Eigen Values are a =')
+disp(T,'The eigen vector vatrix T=')
+disp(T','The KL transform basis is=')
+for i =1:n
+    Y(:,i)=T*X(:,i);
+end
+for i=1:n
+    X(:,i)= T'*Y(:,i);
+end
+disp(X,'Reconstruct matrix of the green sample matrix x=')
+=============================================================================
+Brightness : 
+Code:
+a=imread('D:\scilabsss\image1.png')
+i=a(:,:)
+en=i+50
+su=i-50
+figure(1)
+matplot(a)
+title('Original Image')
+figure(2)
+matplot(en)
+title('Enhanced Image')
+figure(3)
+matplot(su)
+title('Suppressed Image')
+============================================================================
+Negative:
+Code:
+a=imread('D:\scilabsss\image1.png')
+b=a(:,:)
+k=255-b
+figure(1)
+matplot(a)
+title('Original Image')
+figure(2)
+matplot(k)
+title('Negative Image')
+===========================================================================
+Erosion:
+im=imread('D:\scilabsss\New folder\img2.png');
+se=imcreatese('cross',3,3)
+im_d=imerode(im(:,:),se)
+figure(1)
+matplot(im)
+title('Original Image')
+figure(2)
+matplot(im_d)
+title('Eroded Image')
+============================================================================
+Dilation:-
+a=imread('D:\scilabsss\New folder\img2.png')
+se=imcreatese('rect', 3, 3)
+a1=imdilate(a(:,:),se)
+figure(1)
+matplot(a);
+title('Original Image');
+figure(2)
+matplot(a1);
+title('Dilated Image');
+=============================================================================
+Opening Image:
+im=imread('D:\scilabsss\New folder\img3.png');
+a=imcreatese('cross',3,3)
+er=imdilate(im(:,:),a) 
+di=imerode(er,a)
+figure(1)
+matplot(im)
+title('Original Image')
+figure(2)
+matplot(di)
+title(‘closing image')
+===============================================================================
+Color Component:-
+a=imread('D:\scilabsss\New folder\myimg4.png');
+R=a(:,:)
+G=a(:,:)
+B=a(:,:)
+R(:,:,2)=0
+R(:,:,3)=0
+G(:,:,1)=0
+G(:,:,3)=0
+B(:,:,1)=0
+B(:,:,2)=0
+figure(1)
+matplot(im)
+title('Original Image')
+figure(2)
+matplot(R)
+title('Red Image')
+figure(3)
+matplot(G)
+title('Green Image')
+figure(4)
+matplot(B)
+title('Blue Image')
+=============================================================================
+Plane Separation:
+a=imread('D:\scilabsss\New folder\myimg4.png');
+cyan=a(:,:)
+magenta=a(:,:)
+yellow=a(:,:)
+cyan(:,:,1)=0
+magenta(:,:,2)=0
+yellow(:,:,3)=0
+figure(1)
+matplot(a)
+title('Og image')
+figure(2)
+matplot(cyan)
+title('cyan img')
+figure(3)
+matplot(magenta)
+title('magenta img')
+figure(4)
+matplot(yellow)
+title('yellow img')
+============================================================================
+Histogram:
+img=imread('D:\scilabsss\New folder\myimg4.png');
+histB=calcHist(img,0,[],1,32,[0 256]);
+scf();
+bar(histB(:),'blue');
+histG=calcHist(img,1,[],1,32,[0 256]);
+scf();
+bar(histG(:),'green');
+histR=calcHist(img,2,[],1,32,[0 256]);
+scf();
+bar(histR(:),'red');
+==============================================================================
+Shape of Gaussian Filter:-
+sigma=input('Enter the value of sigma: ')
+i=-10:.1:10
+j=-10:.1:10
+r=sqrt(i.*i+j.*j)
+y=(1/(sigma^2))*(((r.*r)/sigma^2)-1).*exp(-r.*r/2*sigma^2)
+plot(i,y)
+legend(sprintf('The Sigma Value is %g',sigma))
+xtitle('Shape Of Gaussian Filter')
+==============================================================================
+sigma1=input('Enter the value of sigma1: ')
+sigma2=input('Enter the value of sigma2: ')
+i=-10:.1:10
+j=-10:.1:10
+r=sqrt(i.*i+j.*j)
+y1=(1/(sigma1^2))*(((r.*r)/sigma1^2)-1).*exp(-r.*r/2*sigma1^2)
+y2=(1/(sigma2^2))*(((r.*r)/sigma2^2)-1).*exp(-r.*r/2*sigma2^2)
+y=y1-y2
+plot(i,y)
+xtitle('Differentiation of DOG filter')
+==============================================================================
+Edge Detection:-
+Roberts & Sobel:-
+im= imread('D:\scilabsss\New folder\img2.png')
+imd= double(im(:,:))
+mask_roberts1=[-1 0;0 1];
+mask_roberts2=[0 -1;1 0];
+mask_prewitt1=[-1 -1 -1; 0 0 0; 1 1 1];
+mask_prewitt2=[-1 0 1; -1 0 1; -1 0 1];
+mask_sobel1=[-1 -2 -1; 0 0 0; 1 2 1];
+mask_sobel2=[-1 0 1; -2 0 2; -1 0 1];
+imdr1=conv2(imd,mask_roberts1);
+imdr2=conv2(imd,mask_roberts2);
+imdp1=conv2(imd,mask_prewitt1);
+imdp2=conv2(imd,mask_prewitt2);
+imds1=conv2(imd,mask_sobel1);
+imds2=conv2(imd,mask_sobel2);
+figure
+matplot(im)
+title("Original image")
+figure
+matplot(imdr1);
+title("robert1 image")
+figure
+matplot(imdr2);
+title("robert2 image")
+figure
+matplot(imdp1);
+title("prewitt1 image")
+figure
+matplot(imdp2);
+title("prewiit2 image")
+figure
+matplot(imds1);
+title("sobel1 image")
+figure
+matplot(imds2);
+title("sobel2 image")
+================================================================================
+Canny:-
+a=imread('D:\scilabsss\New folder\img2.png')
+figure(1)
+matplot(a)
+title('Original Image')
+thresh = 100
+a_canny=Canny(a, thresh, thresh*2, 3)
+figure(2)
+matplot(a_canny)
+title('Canny')
+=================================================================================
+Arithmetic Coding:-
+clc;
+clear all;
+n=input("Enter the no. of symbols : ");
+for i = 1:n
+    printf("Enter the probability(<=1) of symbol %d: ",i);
+    p(i)=input("");
+end
+printf("\nThe cdf of symbol 1: %.3f ",p(1));
+c(1)=p(1);
+for i = 2:n
+    c(i)=p(i)+c(i-1);
+    printf("\nThe cdf of symbol %d: ",i);
+    printf("%.3f",c(i));
+end
+s=input("Enter the no. of symbols in sequence");
+printf("Enter the sequence ");
+for j = 1:s
+    b(j)=input("");
+end
+if b(1) == 1 then
+    l(1)=0;
+    u(1)=c(b(1));
+else
+    l(1)=c(b(1)-1);
+    u(1)=c(b(1));
+end                                           
+for k = 2:s
+    if b(k) == 1 then
+        l(k)=l(k-1);
+        u(k)=l(k-1)+((u(k-1)-l(k-1))*c(b(k)));
+    else
+        l(k)=l(k-1)+((u(k-1)-l(k-1))*c(b(k)-1));
+        u(k)=l(k-1)+((u(k-1)-l(k-1))*c(b(k)));
+    end
+end
+tag=(l(s)+u(s))/2;                                                             
+printf("The tag of the sequence is= %.10f",tag);
+======================================================================================
+Run Length Coding:-
+clc;
+clear;
+close;
+in=input('Enter squares matrix: ');
+[m,n]=size(in);
+y=0;
+tx(1)=0;
+o=1
+for j=1:m
+    for k=1:n
+        x=in(j,k);
+        if x==y
+            tx(o)=tx(o)+1;
+        else
+            o=o+1;
+            tx(o)=1;
+        end
+        y=x;
+    end
+end
+disp('Unordered pairs');
+disp(tx);
+disp('Ordered pairs:');
+for i = 1:2:length(tx)
+    printf('(%d, %d) ', tx(i), tx(i+1));
+end
+=====================================================================================
+Bit length Coding:-
+close;
+clc;
+x=imread(' D:\scilabsss\New folder\img2.png')
+x1=x
+x=double(x(:,:))
+[m1 n1]=size(x)
+blk=input('Enter the block size: ')
+for i=1:blk:m1
+    for j=1:blk:n1
+        y=x(i:i+(blk-1),j:j+(blk-1))
+        m=mean(mean(y))
+        sig=std2(y)
+        b=y>m
+        k=sum(sum(b))
+        if(k~=blk^2)&(k~=0)m1=m-sig*sqrt(k/((blk^2)-k))
+            mu=m+sig*sqrt(((blk^2)-k)/k)
+            x(i:i+(blk-1),j:j+(blk-1))=b*mu+(1-b)*m1
+        end
+    end
+    
+end
+x=uint8(x);
+figure(1)
+matplot(x1)
+title('Original image');
+figure(2)
+matplot(uint8(x));
+title('Block size=2')
+===========================================
+Thresholding -
+a=imread('D:\SEM VI\Digital Image Processing\practicals\leena.png')
+x=a(:,:)
+[m,n]=size(x)
+z=zeros(m,n)
+t=input('Enter the threshold parameter: ')
+for i=1:m
+    for j=1:n
+        if (x(i,j)<t)
+            z(i,j)=0
+        else
+            z(i,j)=255
+        end
+    end
+end
+figure(1)
+matplot(a)
+title('Original Image')
+figure(2)
+matplot(z)
+title('Thresholded Image')
+======================================
+d=imread('D:\SEM VI\Digital Image Processing\practicals\leena.png')
+y=d(:,:)
+[m,n]=size(y)
+z=zeros(m,n)
+L=max(max(y))
+a=round(L/2)
+b=L
+for i=1:m
+    for j=1:n
+        if (y(i,j)>=a & y(i,j)<=b)
+            z(i,j)=L
+        else
+            z(i,j)=y(i,j)
+end
+end
+end
+figure(1)
+matplot(d)
+title('Original Image')
+figure(2)
+matplot(z)
+title('With preserving background')
+==============================================
+Without preserving background -
+d=imread('D:\SEM VI\Digital Image Processing\practicals\leena.png')
+y=d(:,:)
+[m,n]=size(y)
+z=zeros(m,n)
+L=max(max(y))
+a=round(L/2)
+b=L
+for i=1:m
+    for j=1:n
+        if (y(i,j)>=a & y(i,j)<=b)
+            z(i,j)=L
+        else
+            z(i,j)=0
+        end
+    end
+end
+figure(1)
+matplot(y)
+title('Original Image')
+figure(2)
+matplot(z)
+title('Without preserving background')
+
+
+
